@@ -1,0 +1,62 @@
+import nltk
+import re
+import heapq
+from nltk.corpus import stopwords
+from nltk.tokenize import sent_tokenize, word_tokenize
+
+def summarize_text(text, num_sentences=3):
+    # Text preprocessing: remove special characters and digits
+    text = re.sub(r'\s+', ' ', text)
+    text = re.sub(r'\[[0-9]*\]', ' ', text)
+    text = re.sub(r'[^a-zA-Z]', ' ', text)
+
+    # Sentence tokenization
+    sentences = sent_tokenize(text)
+    
+    # Word frequency dictionary
+    stop_words = set(stopwords.words("english"))
+    word_frequencies = {}
+    
+    for word in word_tokenize(text.lower()):
+        if word not in stop_words:
+            if word not in word_frequencies:
+                word_frequencies[word] = 1
+            else:
+                word_frequencies[word] += 1
+
+    # Normalize frequencies
+    max_freq = max(word_frequencies.values(), default=1)
+    for word in word_frequencies:
+        word_frequencies[word] = word_frequencies[word] / max_freq
+
+    # Sentence scores based on word frequencies
+    sentence_scores = {}
+    for sent in sentences:
+        for word in word_tokenize(sent.lower()):
+            if word in word_frequencies:
+                if len(sent.split(' ')) < 30:  # ignore long sentences
+                    if sent not in sentence_scores:
+                        sentence_scores[sent] = word_frequencies[word]
+                    else:
+                        sentence_scores[sent] += word_frequencies[word]
+
+    # Extract the best N sentences
+    summary_sentences = heapq.nlargest(num_sentences, sentence_scores, key=sentence_scores.get)
+    
+    # Return the summary as a string
+    summary = ' '.join(summary_sentences)
+    return summary
+
+
+if __name__ == "__main__":
+    input_text = """
+    Your input text goes here. Replace this string with a long article or text you want to summarize.
+    The quick brown fox jumps over the lazy dog. Natural Language Processing is a fascinating field of artificial intelligence.
+    This tool aims to help summarize long articles into short, concise versions by analyzing the most important sentences.
+    """
+
+    print("Original Text:")
+    print(input_text)
+    print("\n--- Summary ---\n")
+    summary = summarize_text(input_text, num_sentences=2)
+    print(summary)
