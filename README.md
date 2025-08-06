@@ -1,4 +1,9 @@
-Name :- Mishkat Noori Company :- CODTECH IT SOLUTIONS I'd :- CT04DZ155 Domain :- AI Duration :- July to August 2025 Mentor :- Neela Santhosh Kumar 
+Name :- Mishkat Noori 
+Company :- CODTECH IT SOLUTIONS 
+I'd :- CT04DZ155 
+Domain :- AI 
+Duration :- July to August 2025 
+Mentor :- Neela Santhosh Kumar 
 
 ## 📝 **Project Overview: Text Summarization Tool**
 
